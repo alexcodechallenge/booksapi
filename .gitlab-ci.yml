@@ -17,7 +17,21 @@ stages:          # List of stages for jobs, and their order of execution
   - build
   - test
   - deploy
-
+name: Docker build
+on: push
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Kaniko build
+        uses: aevea/action-kaniko@master
+        with:
+          image: aevea/kaniko
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          cache: true
+          cache_registry: aevea/cache
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
